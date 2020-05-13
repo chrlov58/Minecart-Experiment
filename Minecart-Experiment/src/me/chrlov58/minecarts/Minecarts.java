@@ -4,13 +4,12 @@ import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Minecarts extends JavaPlugin implements Listener {
@@ -27,12 +26,13 @@ public class Minecarts extends JavaPlugin implements Listener {
 	}
 	
 	@EventHandler
-	public void onMinecartClick(PlayerInteractEntityEvent event) {
+	public void onRailClick(PlayerInteractEvent event) {
 		Player p = event.getPlayer();
 		if (p.getInventory().getItemInMainHand().getType() != Material.BLAZE_ROD) return;
-		if (event.getRightClicked().getType() != EntityType.MINECART) return;
+		if (event.getClickedBlock().getType() != Material.RAIL) return;
+		event.setCancelled(true);
 		
-		Minecart m = (Minecart) event.getRightClicked();
+		Minecart m = CartEntity.spawn(event.getClickedBlock().getLocation());
 		m.setInvulnerable(true);
 		m.setSlowWhenEmpty(false);
 		
@@ -45,6 +45,7 @@ public class Minecarts extends JavaPlugin implements Listener {
 		Player p = event.getPlayer();
 		
 		if (event.getMessage().equalsIgnoreCase("clear")) {
+			event.setCancelled(true);
 			for (int i : minecarts.keySet()) {
 				minecarts.get(i).remove();
 			}

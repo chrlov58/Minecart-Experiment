@@ -2,3 +2,7 @@ v0.0.1:
   - Initial set up of plugin
   - Added interact event to add minecarts to a hashmap
   - Added chat event to clear minecarts hashmap
+
+v0.0.2:
+  - Made a custom minecart that doesn't move when collided with
+  - Switched the interaction event to be responsible for spawning the minecart
